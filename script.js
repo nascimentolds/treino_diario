@@ -1,9 +1,10 @@
 document.addEventListener('DOMContentLoaded', () => {
 
     // --- DOM Elements ---
-    const appTitle = document.getElementById('app-title');
     const daySelection = document.getElementById('day-selection');
     const workoutDisplay = document.getElementById('workout-display');
+    const workoutHeader = document.getElementById('workout-header');
+    const planNameIndicator = document.getElementById('plan-name-indicator');
     const workoutDayTitle = document.getElementById('workout-day-title');
     const workoutControls = document.getElementById('workout-controls');
     const startButtonContainer = document.getElementById('start-button-container');
@@ -14,11 +15,21 @@ document.addEventListener('DOMContentLoaded', () => {
     const pauseResumeBtn = document.getElementById('pause-resume-btn');
     const nextExerciseBtn = document.getElementById('next-exercise-btn');
     const stopBtn = document.getElementById('stop-btn');
-    const historyBtn = document.getElementById('history-btn');
+    const menuBtn = document.getElementById('menu-btn');
+    const sidenav = document.getElementById('sidenav');
+    const sidenavOverlay = document.getElementById('sidenav-overlay');
+    const closeSidenavBtn = document.getElementById('close-sidenav-btn');
+    const menuThemeBtn = document.getElementById('menu-theme-btn');
+    const menuHistoryBtn = document.getElementById('menu-history-btn');
+    const menuSettingsBtn = document.getElementById('menu-settings-btn');
+    const themeToggleIcon = menuThemeBtn.querySelector('.material-icons');
+    const desktopMenuThemeBtn = document.getElementById('desktop-menu-theme-btn');
+    const desktopMenuHistoryBtn = document.getElementById('desktop-menu-history-btn');
+    const desktopMenuSettingsBtn = document.getElementById('desktop-menu-settings-btn');
+    const desktopThemeIcon = desktopMenuThemeBtn.querySelector('.material-icons');
     const historyOverlay = document.getElementById('history-overlay');
     const closeHistoryBtn = document.getElementById('close-history-btn');
     const historyList = document.getElementById('history-list');
-    const settingsBtn = document.getElementById('settings-btn');
     const settingsOverlay = document.getElementById('settings-overlay');
     const closeSettingsBtn = document.getElementById('close-settings-btn');
     const planList = document.getElementById('plan-list');
@@ -52,16 +63,45 @@ document.addEventListener('DOMContentLoaded', () => {
     let exerciseInitialDuration = 0;
     const BeepSound = new Audio('data:audio/wav;base64,UklGRigAAABXQVZFZm10IBIAAAABAAEARKwAAIhYAQACABAAAABkYXRhAgAAAAEA');
 
-    // --- Funções de Seleção de Plano ---
+    // --- Funções do Menu ---
+    function openSidenav() {
+        sidenav.classList.add('active');
+        sidenavOverlay.classList.add('active');
+    }
+    function closeSidenav() {
+        sidenav.classList.remove('active');
+        sidenavOverlay.classList.remove('active');
+    }
+
+    // --- Funções de Tema ---
+    function applyTheme(theme) {
+        const iconName = theme === 'dark' ? 'light_mode' : 'dark_mode';
+        if (theme === 'dark') {
+            document.body.classList.add('dark-theme');
+        } else {
+            document.body.classList.remove('dark-theme');
+        }
+        themeToggleIcon.textContent = iconName;
+        desktopThemeIcon.textContent = iconName;
+    }
+    function toggleTheme() {
+        const newTheme = document.body.classList.contains('dark-theme') ? 'light' : 'dark';
+        localStorage.setItem('theme', newTheme);
+        applyTheme(newTheme);
+    }
+    function loadTheme() {
+        const savedTheme = localStorage.getItem('theme') || 'light';
+        applyTheme(savedTheme);
+    }
+    
+    // --- Funções de Seleção de Plano e Histórico ---
     function setActivePlan(planId) {
         if (!TODOS_OS_PLANOS[planId]) return;
         activePlanId = planId;
         workoutData = TODOS_OS_PLANOS[planId].dias;
         localStorage.setItem('activePlanId', planId);
-        appTitle.textContent = TODOS_OS_PLANOS[planId].nome;
         displayWorkout(getInitialDay());
     }
-
     function loadActivePlan() {
         let savedPlanId = localStorage.getItem('activePlanId');
         if (!savedPlanId || !TODOS_OS_PLANOS[savedPlanId]) {
@@ -69,7 +109,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         setActivePlan(savedPlanId);
     }
-
     function renderPlanSelection() {
         planList.innerHTML = '';
         for (const planId in TODOS_OS_PLANOS) {
@@ -77,19 +116,13 @@ document.addEventListener('DOMContentLoaded', () => {
             const li = document.createElement('li');
             li.className = 'plan-item';
             li.dataset.planId = plan.id;
-            if (plan.id === activePlanId) {
-                li.classList.add('active');
-            }
+            if (plan.id === activePlanId) li.classList.add('active');
             li.innerHTML = `<h3>${plan.nome}</h3><p>${plan.descricao}</p>`;
             planList.appendChild(li);
         }
     }
-
     function openSettings() { renderPlanSelection(); settingsOverlay.classList.add('active'); }
     function closeSettings() { settingsOverlay.classList.remove('active'); }
-
-
-    // --- Funções de Histórico ---
     function saveHistory() { localStorage.setItem('workoutHistory', JSON.stringify(workoutHistory)); }
     function loadHistory() {
         const savedHistory = localStorage.getItem('workoutHistory');
@@ -98,7 +131,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function renderHistory() {
         historyList.innerHTML = '';
         if (workoutHistory.length === 0) {
-            historyList.innerHTML = '<p style="text-align: center; color: var(--text-muted);">Nenhum treino registrado ainda.</p>';
+            historyList.innerHTML = '<p style="text-align: center; color: var(--text-muted);">Nenhum treino registrado.</p>';
             return;
         }
         workoutHistory.forEach((item, index) => {
@@ -109,7 +142,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
     function deleteHistoryItem(index) {
-        const confirmed = confirm('Tem certeza que deseja apagar este registro? Esta ação não pode ser desfeita.');
+        const confirmed = confirm('Tem certeza que deseja apagar este registro?');
         if (confirmed) {
             workoutHistory.splice(index, 1);
             saveHistory();
@@ -136,10 +169,14 @@ document.addEventListener('DOMContentLoaded', () => {
         
         const workout = workoutData[dayKey];
         workoutDisplay.innerHTML = '';
+        
+        planNameIndicator.textContent = TODOS_OS_PLANOS[activePlanId].nome;
+        workoutHeader.classList.remove('hidden');
 
         if (!workout || !workout.components) {
             workoutDayTitle.textContent = "Dia de Descanso";
             workoutDisplay.innerHTML = `<div class="welcome-message"><span class="material-icons welcome-icon">self_improvement</span><h2>Aproveite para descansar!</h2><p>O descanso é fundamental.</p></div>`;
+            startButtonContainer.classList.add('hidden');
             workoutControls.classList.add('hidden');
             return;
         }
@@ -152,16 +189,13 @@ document.addEventListener('DOMContentLoaded', () => {
             if(component.sets > 1) titleText += ` (${component.sets}x)`;
             else if(component.rounds) titleText += ` (${component.rounds} Rounds)`;
             card.innerHTML = `<h3>${titleText}</h3>`;
-            
             const list = document.createElement('ul');
             list.className = 'exercise-list';
-
             component.exercises.forEach((ex) => {
                 const item = document.createElement('li');
                 item.className = 'exercise-item';
                 item.innerHTML = `<span class="exercise-name">${ex.name} ${ex.note ? `(${ex.note})` : ''}</span><span class="exercise-detail">${ex.value || ''}</span>`;
                 list.appendChild(item);
-
                 if (ex.rest && ex.rest > 0) {
                     const restItem = document.createElement('li');
                     restItem.className = 'exercise-item rest-item';
@@ -169,14 +203,12 @@ document.addEventListener('DOMContentLoaded', () => {
                     list.appendChild(restItem);
                 }
             });
-            
             if (component.rest && component.rest > 0 && component.sets > 1) {
                 const mainRestItem = document.createElement('li');
                 mainRestItem.className = 'exercise-item rest-item main-rest-item';
                 mainRestItem.innerHTML = `<span class="exercise-name"><span class="material-icons">hourglass_empty</span> Descanso entre Séries</span><span class="exercise-detail">${component.rest}s</span>`;
                 list.appendChild(mainRestItem);
             }
-
             card.appendChild(list);
             workoutDisplay.appendChild(card);
         });
@@ -184,37 +216,26 @@ document.addEventListener('DOMContentLoaded', () => {
         resetControlsToInitial();
     }
 
-    // FUNÇÃO ATUALIZADA com a nova lógica para 'tabata_circuit'
     function buildWorkoutQueue(dayKey) {
         const workout = workoutData[dayKey];
         workoutQueue = [];
         if (!workout || !workout.components) return;
-
         let exerciseIdCounter = 0;
         workout.components.forEach(component => {
-            // Lógica para circuitos Tabata
             if (component.type === 'tabata_circuit') {
                 for (let round = 0; round < component.rounds; round++) {
                     const exerciseForRound = component.exercises[round % component.exercises.length];
-                    workoutQueue.push({
-                        name: exerciseForRound.name,
-                        type: 'time',
-                        value: 20,
-                        setInfo: `(Round ${round + 1}/${component.rounds})`,
-                        id: `ex-${exerciseIdCounter++}`
-                    });
+                    workoutQueue.push({ name: exerciseForRound.name, type: 'time', value: 20, setInfo: `(Round ${round + 1}/${component.rounds})`, id: `ex-${exerciseIdCounter++}` });
                     if (round < component.rounds - 1) {
                         workoutQueue.push({ name: 'Descanso Tabata', type: 'rest', value: 10 });
                     }
                 }
-            } else { // Lógica para outros tipos de componentes (circuito, bloco, etc.)
+            } else { 
                 for (let set = 1; set <= component.sets; set++) {
                     component.exercises.forEach((exercise) => {
                         const step = { ...exercise, id: `ex-${exerciseIdCounter++}`, setInfo: `(Set ${set}/${component.sets})` };
                         workoutQueue.push(step);
-                        if (exercise.rest) {
-                            workoutQueue.push({ type: 'rest', value: exercise.rest, name: 'Pausa Rápida'});
-                        }
+                        if (exercise.rest) { workoutQueue.push({ type: 'rest', value: exercise.rest, name: 'Pausa Rápida'}); }
                     });
                     if (component.rest > 0 && set < component.sets) {
                         workoutQueue.push({ type: 'rest', value: component.rest, name: `Descanso do ${component.name}`});
@@ -238,11 +259,7 @@ document.addEventListener('DOMContentLoaded', () => {
     
     function stopWorkout(save = true) {
         if (save && totalSeconds > 5) {
-            const newEntry = {
-                date: new Date().toLocaleDateString('pt-BR'),
-                dayName: workoutDayTitle.textContent,
-                duration: formatTime(totalSeconds)
-            };
+            const newEntry = { date: new Date().toLocaleDateString('pt-BR'), dayName: workoutDayTitle.textContent, duration: formatTime(totalSeconds) };
             workoutHistory.unshift(newEntry);
             saveHistory();
         }
@@ -295,7 +312,6 @@ document.addEventListener('DOMContentLoaded', () => {
         mainIcon.textContent = newIcon;
         timerIcon.textContent = newIcon;
         pauseIndicator.classList.toggle('hidden', !isPaused);
-
         if (!isPaused && isWorkoutRunning) {
             const currentStep = workoutQueue[currentStepIndex];
             if (currentStep && (currentStep.type === 'time' || currentStep.type === 'rest')) {
@@ -314,7 +330,6 @@ document.addEventListener('DOMContentLoaded', () => {
         timerExerciseName.textContent = step.name;
         timerOverlay.classList.remove('hidden');
         if (isPaused) { handlePauseResume(); }
-        
         const updateClock = () => {
             if (isPaused) return;
             timerClock.textContent = formatTime(exerciseSecondsRemaining);
@@ -351,6 +366,7 @@ document.addEventListener('DOMContentLoaded', () => {
         nextExerciseBtn.classList.remove('hidden');
     }
     
+    // FUNÇÕES DE CONTROLE CORRIGIDAS
     function resetControlsToInitial() {
         workoutControls.classList.remove('hidden');
         startButtonContainer.classList.remove('hidden');
@@ -359,7 +375,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function updateControlsForRunning() {
-        workoutControls.classList.remove('hidden');
         startButtonContainer.classList.add('hidden');
         activeWorkoutView.classList.remove('hidden');
     }
@@ -381,6 +396,19 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // --- Event Listeners ---
+    menuBtn.addEventListener('click', openSidenav);
+    closeSidenavBtn.addEventListener('click', closeSidenav);
+    sidenavOverlay.addEventListener('click', closeSidenav);
+    const handleThemeClick = (e) => { e.preventDefault(); toggleTheme(); };
+    const handleHistoryClick = (e) => { e.preventDefault(); openHistory(); closeSidenav(); };
+    const handleSettingsClick = (e) => { e.preventDefault(); openSettings(); closeSidenav(); };
+    menuThemeBtn.addEventListener('click', handleThemeClick);
+    desktopMenuThemeBtn.addEventListener('click', handleThemeClick);
+    menuHistoryBtn.addEventListener('click', handleHistoryClick);
+    desktopMenuHistoryBtn.addEventListener('click', handleHistoryClick);
+    menuSettingsBtn.addEventListener('click', handleSettingsClick);
+    desktopMenuSettingsBtn.addEventListener('click', handleSettingsClick);
+
     daySelection.addEventListener('click', (e) => {
         if (e.target.classList.contains('day-btn')) displayWorkout(e.target.dataset.day);
     });
@@ -388,9 +416,7 @@ document.addEventListener('DOMContentLoaded', () => {
     pauseResumeBtn.addEventListener('click', handlePauseResume);
     nextExerciseBtn.addEventListener('click', nextStep);
     stopBtn.addEventListener('click', () => stopWorkout(true));
-    historyBtn.addEventListener('click', openHistory);
     closeHistoryBtn.addEventListener('click', closeHistory);
-    settingsBtn.addEventListener('click', openSettings);
     closeSettingsBtn.addEventListener('click', closeSettings);
     pauseResumeTimerBtn.addEventListener('click', handlePauseResume);
     restartTimerBtn.addEventListener('click', restartCurrentTimer);
@@ -414,6 +440,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const todayIndex = new Date().getDay();
         return dayMap[todayIndex];
     }
+    loadTheme();
     loadHistory();
     loadActivePlan();
 });
