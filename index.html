@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Plano de Treino</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+</head>
+<body>
+
+    <div class="app-container">
+        <main class="app-screen">
+            <header class="app-header">
+                <div class="header-title">
+                    <h1>Seu Treino</h1>
+                    <p id="workout-day-title">Escolha um dia para começar</p>
+                </div>
+                <button id="history-btn" class="header-btn">
+                    <span class="material-icons">history</span>
+                </button>
+            </header>
+
+            <nav id="day-selection">
+                <button class="day-btn" data-day="segunda">S</button>
+                <button class="day-btn" data-day="terca">T</button>
+                <button class="day-btn" data-day="quarta">Q</button>
+                <button class="day-btn" data-day="quinta">Q</button>
+                <button class="day-btn" data-day="sexta">S</button>
+            </nav>
+            
+            <div id="workout-display">
+                <div class="welcome-message">
+                    <span class="material-icons welcome-icon">fitness_center</span>
+                    <h2>Pronto para suar?</h2>
+                    <p>Selecione um dia da semana acima para ver os detalhes do seu treino.</p>
+                </div>
+            </div>
+
+            <div id="start-button-container">
+                <button id="start-workout-btn" class="btn btn-primary hidden">Iniciar Treino</button>
+            </div>
+        </main>
+
+        <footer id="workout-controls" class="hidden">
+            <div class="workout-status-bar">
+                <div class="status-item">
+                    <span>EXERCÍCIO ATUAL</span>
+                    <strong id="current-exercise-name">Nenhum</strong>
+                </div>
+                <div class="status-item">
+                    <span>TEMPO TOTAL</span>
+                    <strong id="total-time">00:00</strong>
+                </div>
+            </div>
+            <div class="control-buttons">
+                <button id="pause-resume-btn" class="control-btn">
+                    <span class="material-icons">pause</span>
+                </button>
+                <button id="next-exercise-btn" class="control-btn-main">Próximo</button>
+                <button id="stop-btn" class="control-btn">
+                    <span class="material-icons">stop</span>
+                </button>
+            </div>
+        </footer>
+    </div>
+
+    <div id="timer-overlay" class="hidden">
+        <div class="timer-content">
+            <p id="timer-instruction">PREPARE-SE</p>
+            <h2 id="timer-exercise-name">Nome do Exercício</h2>
+            <div id="timer-clock-container">
+                <svg class="timer-progress" width="220" height="220">
+                    <circle class="progress-bg" cx="110" cy="110" r="100" />
+                    <circle id="progress-ring" class="progress-ring" cx="110" cy="110" r="100" />
+                </svg>
+                <div id="timer-clock">00:00</div>
+            </div>
+            <p id="pause-indicator" class="hidden">PAUSADO</p>
+            <div class="timer-buttons">
+                <button id="skip-timer-btn" class="btn btn-secondary">Pular</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="history-overlay" class="page-overlay">
+        <div class="history-content">
+            <button id="close-history-btn" class="close-btn">&times;</button>
+            <h2>Histórico de Treinos</h2>
+            <ul id="history-list">
+                </ul>
+        </div>
+    </div>
+    
+    <script src="script.js"></script>
+</body>
+</html>
