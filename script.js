@@ -5,27 +5,23 @@ document.addEventListener('DOMContentLoaded', () => {
     const daySelection = document.getElementById('day-selection');
     const workoutDisplay = document.getElementById('workout-display');
     const workoutDayTitle = document.getElementById('workout-day-title');
-    const startWorkoutBtn = document.getElementById('start-workout-btn');
     const workoutControls = document.getElementById('workout-controls');
+    const startButtonContainer = document.getElementById('start-button-container');
+    const startWorkoutBtn = document.getElementById('start-workout-btn');
+    const activeWorkoutView = document.getElementById('active-workout-view');
     const currentExerciseNameEl = document.getElementById('current-exercise-name');
     const totalTimeEl = document.getElementById('total-time');
     const pauseResumeBtn = document.getElementById('pause-resume-btn');
     const nextExerciseBtn = document.getElementById('next-exercise-btn');
     const stopBtn = document.getElementById('stop-btn');
-    
-    // History elements
     const historyBtn = document.getElementById('history-btn');
     const historyOverlay = document.getElementById('history-overlay');
     const closeHistoryBtn = document.getElementById('close-history-btn');
     const historyList = document.getElementById('history-list');
-
-    // Settings elements
     const settingsBtn = document.getElementById('settings-btn');
     const settingsOverlay = document.getElementById('settings-overlay');
     const closeSettingsBtn = document.getElementById('close-settings-btn');
     const planList = document.getElementById('plan-list');
-
-    // Timer elements
     const timerOverlay = document.getElementById('timer-overlay');
     const timerInstruction = document.getElementById('timer-instruction');
     const timerExerciseName = document.getElementById('timer-exercise-name');
@@ -42,15 +38,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- State ---
     let activePlanId = '';
-    let workoutData = {}; // Agora é dinâmico, baseado no plano ativo
+    let workoutData = {};
     let selectedDay = null;
     let workoutQueue = [];
     let currentStepIndex = -1;
     let isWorkoutRunning = false;
     let isPaused = false;
     let workoutHistory = [];
-    
-    // Timers
     let totalTimeInterval = null;
     let totalSeconds = 0;
     let exerciseTimerInterval = null;
@@ -61,21 +55,17 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- Funções de Seleção de Plano ---
     function setActivePlan(planId) {
         if (!TODOS_OS_PLANOS[planId]) return;
-
         activePlanId = planId;
-        workoutData = TODOS_OS_PLANOS[planId].dias; // Define os dados do treino atual
-        localStorage.setItem('activePlanId', planId); // Salva a escolha do usuário
-
+        workoutData = TODOS_OS_PLANOS[planId].dias;
+        localStorage.setItem('activePlanId', planId);
         appTitle.textContent = TODOS_OS_PLANOS[planId].nome;
-
-        // Atualiza a exibição com o treino do dia do novo plano
         displayWorkout(getInitialDay());
     }
 
     function loadActivePlan() {
         let savedPlanId = localStorage.getItem('activePlanId');
         if (!savedPlanId || !TODOS_OS_PLANOS[savedPlanId]) {
-            savedPlanId = Object.keys(TODOS_OS_PLANOS)[0]; // Pega o primeiro plano como padrão
+            savedPlanId = Object.keys(TODOS_OS_PLANOS)[0];
         }
         setActivePlan(savedPlanId);
     }
@@ -95,14 +85,8 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    function openSettings() {
-        renderPlanSelection();
-        settingsOverlay.classList.add('active');
-    }
-
-    function closeSettings() {
-        settingsOverlay.classList.remove('active');
-    }
+    function openSettings() { renderPlanSelection(); settingsOverlay.classList.add('active'); }
+    function closeSettings() { settingsOverlay.classList.remove('active'); }
 
 
     // --- Funções de Histórico ---
@@ -155,8 +139,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (!workout || !workout.components) {
             workoutDayTitle.textContent = "Dia de Descanso";
-            workoutDisplay.innerHTML = `<div class="welcome-message"><span class="material-icons welcome-icon">self_improvement</span><h2>Aproveite para descansar!</h2><p>O descanso é fundamental para a recuperação e crescimento muscular.</p></div>`;
-            startWorkoutBtn.classList.add('hidden');
+            workoutDisplay.innerHTML = `<div class="welcome-message"><span class="material-icons welcome-icon">self_improvement</span><h2>Aproveite para descansar!</h2><p>O descanso é fundamental.</p></div>`;
+            workoutControls.classList.add('hidden');
             return;
         }
         
@@ -164,24 +148,43 @@ document.addEventListener('DOMContentLoaded', () => {
         workout.components.forEach(component => {
             const card = document.createElement('div');
             card.className = 'workout-card';
-            let titleText = `${component.name} ${component.sets > 1 ? `(${component.sets}x)` : ''}`;
+            let titleText = component.name;
+            if(component.sets > 1) titleText += ` (${component.sets}x)`;
+            else if(component.rounds) titleText += ` (${component.rounds} Rounds)`;
             card.innerHTML = `<h3>${titleText}</h3>`;
+            
             const list = document.createElement('ul');
             list.className = 'exercise-list';
-            component.exercises.forEach(ex => {
+
+            component.exercises.forEach((ex) => {
                 const item = document.createElement('li');
                 item.className = 'exercise-item';
-                item.innerHTML = `<span class="exercise-name">${ex.name} ${ex.note ? `(${ex.note})` : ''}</span><span class="exercise-detail">${ex.value}</span>`;
+                item.innerHTML = `<span class="exercise-name">${ex.name} ${ex.note ? `(${ex.note})` : ''}</span><span class="exercise-detail">${ex.value || ''}</span>`;
                 list.appendChild(item);
+
+                if (ex.rest && ex.rest > 0) {
+                    const restItem = document.createElement('li');
+                    restItem.className = 'exercise-item rest-item';
+                    restItem.innerHTML = `<span class="exercise-name"><span class="material-icons">timer</span> Descanso Rápido</span><span class="exercise-detail">${ex.rest}s</span>`;
+                    list.appendChild(restItem);
+                }
             });
+            
+            if (component.rest && component.rest > 0 && component.sets > 1) {
+                const mainRestItem = document.createElement('li');
+                mainRestItem.className = 'exercise-item rest-item main-rest-item';
+                mainRestItem.innerHTML = `<span class="exercise-name"><span class="material-icons">hourglass_empty</span> Descanso entre Séries</span><span class="exercise-detail">${component.rest}s</span>`;
+                list.appendChild(mainRestItem);
+            }
+
             card.appendChild(list);
             workoutDisplay.appendChild(card);
         });
         
         resetControlsToInitial();
-        startWorkoutBtn.classList.remove('hidden');
     }
 
+    // FUNÇÃO ATUALIZADA com a nova lógica para 'tabata_circuit'
     function buildWorkoutQueue(dayKey) {
         const workout = workoutData[dayKey];
         workoutQueue = [];
@@ -189,19 +192,33 @@ document.addEventListener('DOMContentLoaded', () => {
 
         let exerciseIdCounter = 0;
         workout.components.forEach(component => {
-            for (let set = 1; set <= component.sets; set++) {
-                component.exercises.forEach((exercise) => {
-                    const step = { ...exercise, id: `ex-${exerciseIdCounter++}`, setInfo: `(Set ${set}/${component.sets})` };
-                    if (exercise.type === 'tabata') {
-                        for (let i = 0; i < 8; i++) {
-                           workoutQueue.push({ ...step, name: `${exercise.name}`, type: 'time', value: 20, setInfo: `(Round ${i+1}/8)` });
-                           if (i < 7) workoutQueue.push({ type: 'rest', value: 10, name: 'Descanso Tabata'});
+            // Lógica para circuitos Tabata
+            if (component.type === 'tabata_circuit') {
+                for (let round = 0; round < component.rounds; round++) {
+                    const exerciseForRound = component.exercises[round % component.exercises.length];
+                    workoutQueue.push({
+                        name: exerciseForRound.name,
+                        type: 'time',
+                        value: 20,
+                        setInfo: `(Round ${round + 1}/${component.rounds})`,
+                        id: `ex-${exerciseIdCounter++}`
+                    });
+                    if (round < component.rounds - 1) {
+                        workoutQueue.push({ name: 'Descanso Tabata', type: 'rest', value: 10 });
+                    }
+                }
+            } else { // Lógica para outros tipos de componentes (circuito, bloco, etc.)
+                for (let set = 1; set <= component.sets; set++) {
+                    component.exercises.forEach((exercise) => {
+                        const step = { ...exercise, id: `ex-${exerciseIdCounter++}`, setInfo: `(Set ${set}/${component.sets})` };
+                        workoutQueue.push(step);
+                        if (exercise.rest) {
+                            workoutQueue.push({ type: 'rest', value: exercise.rest, name: 'Pausa Rápida'});
                         }
-                    } else { workoutQueue.push(step); }
-                    if (exercise.rest) { workoutQueue.push({ type: 'rest', value: exercise.rest, name: 'Pausa Rápida'}); }
-                });
-                if (component.rest > 0 && set < component.sets) {
-                    workoutQueue.push({ type: 'rest', value: component.rest, name: `Descanso do ${component.name}`});
+                    });
+                    if (component.rest > 0 && set < component.sets) {
+                        workoutQueue.push({ type: 'rest', value: component.rest, name: `Descanso do ${component.name}`});
+                    }
                 }
             }
         });
@@ -223,7 +240,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (save && totalSeconds > 5) {
             const newEntry = {
                 date: new Date().toLocaleDateString('pt-BR'),
-                dayName: TODOS_OS_PLANOS[activePlanId].dias[selectedDay].title,
+                dayName: workoutDayTitle.textContent,
                 duration: formatTime(totalSeconds)
             };
             workoutHistory.unshift(newEntry);
@@ -296,7 +313,7 @@ document.addEventListener('DOMContentLoaded', () => {
         timerInstruction.textContent = step.type === 'rest' ? 'DESCANSO' : 'EXERCÍCIO';
         timerExerciseName.textContent = step.name;
         timerOverlay.classList.remove('hidden');
-        if (isPaused) handlePauseResume();
+        if (isPaused) { handlePauseResume(); }
         
         const updateClock = () => {
             if (isPaused) return;
@@ -318,7 +335,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function restartCurrentTimer() {
         if (!isWorkoutRunning) return;
         exerciseSecondsRemaining = exerciseInitialDuration;
-        if (isPaused) handlePauseResume();
+        if (isPaused) { handlePauseResume(); }
     }
 
     function skipCurrentStep() {
@@ -329,20 +346,22 @@ document.addEventListener('DOMContentLoaded', () => {
     
     function closeTimerAndPause() {
         if (!isWorkoutRunning) return;
-        if (!isPaused) handlePauseResume();
+        if (!isPaused) { handlePauseResume(); }
         timerOverlay.classList.add('hidden');
         nextExerciseBtn.classList.remove('hidden');
     }
-
+    
     function resetControlsToInitial() {
-        startWorkoutBtn.classList.add('hidden');
-        workoutControls.classList.add('hidden');
+        workoutControls.classList.remove('hidden');
+        startButtonContainer.classList.remove('hidden');
+        activeWorkoutView.classList.add('hidden');
         document.querySelectorAll('.exercise-item.current').forEach(el => el.classList.remove('current'));
     }
 
     function updateControlsForRunning() {
-        startWorkoutBtn.classList.add('hidden');
         workoutControls.classList.remove('hidden');
+        startButtonContainer.classList.add('hidden');
+        activeWorkoutView.classList.remove('hidden');
     }
 
     function updateCurrentExerciseUI(step) {
@@ -350,8 +369,14 @@ document.addEventListener('DOMContentLoaded', () => {
         currentExerciseNameEl.textContent = step.name;
         if (step.id) {
             const allItems = document.querySelectorAll('.exercise-item');
-            const matchingItem = Array.from(allItems).find(item => item.querySelector('.exercise-name').textContent.startsWith(step.name));
-            if(matchingItem) matchingItem.classList.add('current');
+            const matchingItem = Array.from(allItems).find(item => {
+                const nameSpan = item.querySelector('.exercise-name');
+                return nameSpan && nameSpan.textContent.includes(step.name);
+            });
+            if(matchingItem) {
+                matchingItem.classList.add('current');
+                matchingItem.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
         }
     }
 
@@ -359,7 +384,6 @@ document.addEventListener('DOMContentLoaded', () => {
     daySelection.addEventListener('click', (e) => {
         if (e.target.classList.contains('day-btn')) displayWorkout(e.target.dataset.day);
     });
-
     startWorkoutBtn.addEventListener('click', startWorkout);
     pauseResumeBtn.addEventListener('click', handlePauseResume);
     nextExerciseBtn.addEventListener('click', nextStep);
@@ -372,14 +396,10 @@ document.addEventListener('DOMContentLoaded', () => {
     restartTimerBtn.addEventListener('click', restartCurrentTimer);
     exitWorkoutBtn.addEventListener('click', closeTimerAndPause);
     skipStepBtn.addEventListener('click', skipCurrentStep);
-
     historyList.addEventListener('click', (e) => {
         const deleteButton = e.target.closest('.delete-history-btn');
-        if (deleteButton) {
-            deleteHistoryItem(parseInt(deleteButton.dataset.index, 10));
-        }
+        if (deleteButton) deleteHistoryItem(parseInt(deleteButton.dataset.index, 10));
     });
-
     planList.addEventListener('click', (e) => {
         const planItem = e.target.closest('.plan-item');
         if (planItem) {

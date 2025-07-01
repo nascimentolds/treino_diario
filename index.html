@@ -36,27 +36,29 @@
             
             <div id="workout-display">
                 </div>
-
-            <div id="start-button-container">
-                <button id="start-workout-btn" class="btn btn-primary hidden">Iniciar Treino</button>
-            </div>
         </main>
 
         <footer id="workout-controls" class="hidden">
-            <div class="workout-status-bar">
-                <div class="status-item">
-                    <span>EXERCÍCIO ATUAL</span>
-                    <strong id="current-exercise-name">Nenhum</strong>
+            <div id="active-workout-view" class="hidden">
+                <div class="workout-status-bar">
+                    <div class="status-item">
+                        <span>EXERCÍCIO ATUAL</span>
+                        <strong id="current-exercise-name">Nenhum</strong>
+                    </div>
+                    <div class="status-item">
+                        <span>TEMPO TOTAL</span>
+                        <strong id="total-time">00:00</strong>
+                    </div>
                 </div>
-                <div class="status-item">
-                    <span>TEMPO TOTAL</span>
-                    <strong id="total-time">00:00</strong>
+                <div class="control-buttons">
+                    <button id="pause-resume-btn" class="control-btn"><span class="material-icons">pause</span></button>
+                    <button id="next-exercise-btn" class="control-btn-main">Próximo</button>
+                    <button id="stop-btn" class="control-btn"><span class="material-icons">stop</span></button>
                 </div>
             </div>
-            <div class="control-buttons">
-                <button id="pause-resume-btn" class="control-btn"><span class="material-icons">pause</span></button>
-                <button id="next-exercise-btn" class="control-btn-main">Próximo</button>
-                <button id="stop-btn" class="control-btn"><span class="material-icons">stop</span></button>
+
+            <div id="start-button-container">
+                <button id="start-workout-btn" class="btn btn-primary">Iniciar Treino</button>
             </div>
         </footer>
     </div>
@@ -91,8 +93,7 @@
         <div class="settings-content">
             <button id="close-settings-btn" class="close-btn">&times;</button>
             <h2>Escolha seu Plano de Treino</h2>
-            <ul id="plan-list">
-                </ul>
+            <ul id="plan-list"></ul>
         </div>
     </div>
     
