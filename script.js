@@ -20,8 +20,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const pauseResumeBtn = document.getElementById('pause-resume-btn');
     const nextExerciseBtn = document.getElementById('next-exercise-btn');
     const stopBtn = document.getElementById('stop-btn');
-    
-    // Timer elements
+    const historyBtn = document.getElementById('history-btn');
+    const historyOverlay = document.getElementById('history-overlay');
+    const closeHistoryBtn = document.getElementById('close-history-btn');
+    const historyList = document.getElementById('history-list');
     const timerOverlay = document.getElementById('timer-overlay');
     const timerInstruction = document.getElementById('timer-instruction');
     const timerExerciseName = document.getElementById('timer-exercise-name');
@@ -31,14 +33,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const ringCircumference = 2 * Math.PI * ringRadius;
     progressRing.style.strokeDasharray = `${ringCircumference} ${ringCircumference}`;
     const pauseIndicator = document.getElementById('pause-indicator');
-    const skipTimerBtn = document.getElementById('skip-timer-btn');
-    const BeepSound = new Audio('data:audio/mp3;base64,SUQzBAAAAAAAI1RTU0UAAAAPAAADTGF2ZjU2LjQwLjEwMQAAAAAAAAAAAAAA//tAwAAAAAAAAAAAAAAAAAAAAAAAAB4AAAAAABWUDQyAAAAAAAAAAAAAAAIAAAAbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW//uEMN4ADkFrgAAAAAAAAAAAAAAAAAAAAAAAADgAAAABVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV//uEMV4ADkFrgAAAAAAAAAAAAAAAAAAAAAAAADgAAAACqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq'); // Simple beep sound
-
-    // --- Elementos do Histórico ---
-    const historyBtn = document.getElementById('history-btn');
-    const historyOverlay = document.getElementById('history-overlay');
-    const closeHistoryBtn = document.getElementById('close-history-btn');
-    const historyList = document.getElementById('history-list');
+    const pauseResumeTimerBtn = document.getElementById('pause-resume-timer-btn');
+    const restartTimerBtn = document.getElementById('restart-timer-btn');
+    const exitWorkoutBtn = document.getElementById('exit-workout-btn');
+    const skipStepBtn = document.getElementById('skip-step-btn');
 
     // --- State ---
     let selectedDay = null;
@@ -47,50 +45,44 @@ document.addEventListener('DOMContentLoaded', () => {
     let isWorkoutRunning = false;
     let isPaused = false;
     let workoutHistory = [];
-    
-    // Timers
     let totalTimeInterval = null;
     let totalSeconds = 0;
     let exerciseTimerInterval = null;
     let exerciseSecondsRemaining = 0;
     let exerciseInitialDuration = 0;
+    const BeepSound = new Audio('data:audio/mp3;base64,SUQzBAAAAAAAI1RTU0UAAAAPAAADTGF2ZjU2LjQwLjEwMQAAAAAAAAAAAAAA//tAwAAAAAAAAAAAAAAAAAAAAAAAAB4AAAAAABWUDQyAAAAAAAAAAAAAAAIAAAAbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW//uEMN4ADkFrgAAAAAAAAAAAAAAAAAAAAAAAADgAAAABVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV//uEMV4ADkFrgAAAAAAAAAAAAAAAAAAAAAAAADgAAAACqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq');
 
-    // --- Funções de Histórico ---
-    function saveHistory() {
-        localStorage.setItem('workoutHistory', JSON.stringify(workoutHistory));
-    }
-
+    //  --- Funções de Histórico ---
+    function saveHistory() { localStorage.setItem('workoutHistory', JSON.stringify(workoutHistory)); }
     function loadHistory() {
         const savedHistory = localStorage.getItem('workoutHistory');
-        if (savedHistory) {
-            workoutHistory = JSON.parse(savedHistory);
-        }
+        if (savedHistory) workoutHistory = JSON.parse(savedHistory);
     }
-
     function renderHistory() {
         historyList.innerHTML = '';
         if (workoutHistory.length === 0) {
             historyList.innerHTML = '<p style="text-align: center; color: var(--text-muted);">Nenhum treino registrado ainda.</p>';
             return;
         }
-        workoutHistory.forEach(item => {
+        workoutHistory.forEach((item, index) => {
             const li = document.createElement('li');
             li.className = 'history-item';
-            li.innerHTML = `<div class="history-info"><strong>${item.dayName}</strong><span>${item.date}</span></div><div class="history-duration">${item.duration}</div>`;
+            li.innerHTML = `<div class="history-info"><strong>${item.dayName}</strong><span>${item.date}</span></div><div class="history-duration">${item.duration}</div><button class="delete-history-btn" data-index="${index}"><span class="material-icons">delete_outline</span></button>`;
             historyList.appendChild(li);
         });
     }
-
-    function openHistory() {
-        renderHistory();
-        historyOverlay.classList.add('active'); // Ativa a animação
+    function deleteHistoryItem(index) {
+        const confirmed = confirm('Tem certeza que deseja apagar este registro? Esta ação não pode ser desfeita.');
+        if (confirmed) {
+            workoutHistory.splice(index, 1);
+            saveHistory();
+            renderHistory();
+        }
     }
+    function openHistory() { renderHistory(); historyOverlay.classList.add('active'); }
+    function closeHistory() { historyOverlay.classList.remove('active'); }
 
-    function closeHistory() {
-        historyOverlay.classList.remove('active'); // Desativa a animação
-    }
-
-    // --- Funções Principais (com modificações) ---
+    // --- Funções Principais ---
     function formatTime(seconds) {
         const mins = String(Math.floor(seconds / 60)).padStart(2, '0');
         const secs = String(seconds % 60).padStart(2, '0');
@@ -138,12 +130,8 @@ document.addEventListener('DOMContentLoaded', () => {
                            workoutQueue.push({ ...step, name: `${exercise.name}`, type: 'time', value: 20, setInfo: `(Round ${i+1}/8)` });
                            if (i < 7) workoutQueue.push({ type: 'rest', value: 10, name: 'Descanso Tabata'});
                         }
-                    } else {
-                        workoutQueue.push(step);
-                    }
-                    if (exercise.rest) {
-                        workoutQueue.push({ type: 'rest', value: exercise.rest, name: 'Pausa Rápida'});
-                    }
+                    } else { workoutQueue.push(step); }
+                    if (exercise.rest) { workoutQueue.push({ type: 'rest', value: exercise.rest, name: 'Pausa Rápida'}); }
                 });
                 if (component.rest > 0 && set < component.sets) {
                     workoutQueue.push({ type: 'rest', value: component.rest, name: `Descanso do ${component.name}`});
@@ -155,17 +143,14 @@ document.addEventListener('DOMContentLoaded', () => {
     function startWorkout() {
         buildWorkoutQueue(selectedDay);
         if (workoutQueue.length === 0) return;
-        isWorkoutRunning = true;
-        isPaused = false;
-        currentStepIndex = -1;
-        totalSeconds = 0;
+        isWorkoutRunning = true; isPaused = false; currentStepIndex = -1; totalSeconds = 0;
         startTotalTimer();
         updateControlsForRunning();
         nextStep();
     }
     
     function stopWorkout(save = true) {
-        if (save && totalSeconds > 0) {
+        if (save && totalSeconds > 5) {
             const newEntry = {
                 date: new Date().toLocaleDateString('pt-BR'),
                 dayName: workoutData[selectedDay].title,
@@ -197,8 +182,14 @@ document.addEventListener('DOMContentLoaded', () => {
         }, 1000);
     }
 
+    // FUNÇÃO ATUALIZADA com a correção principal
     function nextStep() {
         if (!isWorkoutRunning) return;
+
+        // CORREÇÃO PRINCIPAL: Garante que qualquer timer anterior seja limpo
+        // antes de prosseguir. Isso conserta os dois bugs relatados.
+        clearInterval(exerciseTimerInterval);
+
         currentStepIndex++;
         if (currentStepIndex >= workoutQueue.length) {
             finishWorkout();
@@ -216,26 +207,43 @@ document.addEventListener('DOMContentLoaded', () => {
     
     function handlePauseResume() {
         isPaused = !isPaused;
-        const icon = pauseResumeBtn.querySelector('.material-icons');
-        icon.textContent = isPaused ? 'play_arrow' : 'pause';
+        const mainIcon = pauseResumeBtn.querySelector('.material-icons');
+        const timerIcon = pauseResumeTimerBtn.querySelector('.material-icons');
+        const newIcon = isPaused ? 'play_arrow' : 'pause';
+        
+        mainIcon.textContent = newIcon;
+        timerIcon.textContent = newIcon;
+        
         pauseIndicator.classList.toggle('hidden', !isPaused);
+
+        if (!isPaused && isWorkoutRunning) {
+            const currentStep = workoutQueue[currentStepIndex];
+            if (currentStep && (currentStep.type === 'time' || currentStep.type === 'rest')) {
+                startExerciseTimer(currentStep, true);
+            }
+        }
     }
 
-    function startExerciseTimer(step) {
+    function startExerciseTimer(step, isResuming = false) {
         clearInterval(exerciseTimerInterval);
-        exerciseInitialDuration = step.value;
-        exerciseSecondsRemaining = step.value;
+
+        if (!isResuming) {
+            exerciseInitialDuration = step.value;
+            exerciseSecondsRemaining = step.value;
+        }
+        
         timerInstruction.textContent = step.type === 'rest' ? 'DESCANSO' : 'EXERCÍCIO';
         timerExerciseName.textContent = step.name;
         timerOverlay.classList.remove('hidden');
-        pauseIndicator.classList.add('hidden');
-        isPaused = false;
-        pauseResumeBtn.querySelector('.material-icons').textContent = 'pause';
-
+        
+        if (isPaused) {
+            handlePauseResume();
+        }
+        
         const updateClock = () => {
             if (isPaused) return;
             timerClock.textContent = formatTime(exerciseSecondsRemaining);
-            const progressOffset = ( (exerciseInitialDuration - exerciseSecondsRemaining) / exerciseInitialDuration) * ringCircumference;
+            const progressOffset = ((exerciseInitialDuration - exerciseSecondsRemaining) / exerciseInitialDuration) * ringCircumference;
             progressRing.style.strokeDashoffset = ringCircumference - progressOffset;
             if (exerciseSecondsRemaining <= 0) {
                 clearInterval(exerciseTimerInterval);
@@ -248,11 +256,29 @@ document.addEventListener('DOMContentLoaded', () => {
         updateClock();
         exerciseTimerInterval = setInterval(updateClock, 1000);
     }
-    
-    function skipTimer() {
-        clearInterval(exerciseTimerInterval);
+
+    function restartCurrentTimer() {
+        if (!isWorkoutRunning) return;
+        exerciseSecondsRemaining = exerciseInitialDuration;
+        if (isPaused) {
+            handlePauseResume();
+        }
+    }
+
+    function skipCurrentStep() {
+        if (!isWorkoutRunning) return;
+        // Não precisa mais do clearInterval aqui, pois nextStep() já cuida disso.
         timerOverlay.classList.add('hidden');
         nextStep();
+    }
+    
+    function closeTimerAndPause() {
+        if (!isWorkoutRunning) return;
+        if (!isPaused) {
+            handlePauseResume();
+        }
+        timerOverlay.classList.add('hidden');
+        nextExerciseBtn.classList.remove('hidden');
     }
 
     function resetControlsToInitial() {
@@ -287,13 +313,27 @@ document.addEventListener('DOMContentLoaded', () => {
     pauseResumeBtn.addEventListener('click', handlePauseResume);
     nextExerciseBtn.addEventListener('click', nextStep);
     stopBtn.addEventListener('click', () => stopWorkout(true));
-    skipTimerBtn.addEventListener('click', skipTimer);
-    
-    // Listeners do Histórico
     historyBtn.addEventListener('click', openHistory);
     closeHistoryBtn.addEventListener('click', closeHistory);
+    pauseResumeTimerBtn.addEventListener('click', handlePauseResume);
+    restartTimerBtn.addEventListener('click', restartCurrentTimer);
+    exitWorkoutBtn.addEventListener('click', closeTimerAndPause);
+    skipStepBtn.addEventListener('click', skipCurrentStep);
+
+    historyList.addEventListener('click', (e) => {
+        const deleteButton = e.target.closest('.delete-history-btn');
+        if (deleteButton) {
+            const indexToDelete = parseInt(deleteButton.dataset.index, 10);
+            deleteHistoryItem(indexToDelete);
+        }
+    });
 
     // --- Initial state ---
+    function getInitialDay() {
+        const dayMap = [ 'segunda', 'segunda', 'terca', 'quarta', 'quinta', 'sexta', 'segunda' ];
+        const todayIndex = new Date().getDay();
+        return dayMap[todayIndex];
+    }
     loadHistory();
-    displayWorkout('segunda');
+    displayWorkout(getInitialDay());
 });
