@@ -48,5 +48,96 @@ const TODOS_OS_PLANOS = {
       quinta: { title: "Inferior + Core Dinâmico", components: [{ type: 'circuito', name: 'Pernas & Glúteo', sets: 3, rest: 60, exercises: [{ name: 'Afundo alternado', type: 'reps', value: '15 reps/perna' }, { name: 'Ponte de glúteo', type: 'reps', value: '20 reps' }, { name: 'Elevação de panturrilha', type: 'reps', value: '25 reps' }, { name: 'Agachamento isométrico', type: 'time', value: 45 }] }, { type: 'core-block', name: 'Core Dinâmico', sets: 2, rest: 45, exercises: [{ name: 'Abdominal com pés elevados', type: 'reps', value: '20 reps' }, { name: 'Prancha lateral c/ elevação', type: 'time', value: 30, note: 'por lado' }] }] },
       sexta: { title: "Mobilidade + Ativação Leve", components: [{ type: 'circuito', name: 'Mobilidade e Controle Corporal', sets: 2, rest: 60, exercises: [{ name: 'Alongamento dinâmico', type: 'time', value: 60 }, { name: 'Agachamento com peso corporal + mobilidade', type: 'reps', value: '15 reps' }, { name: 'Prancha com respiração profunda', type: 'time', value: 60 }] }, { type: 'finalizador', name: 'Fechamento Leve', sets: 1, rest: 0, exercises: [{ name: 'Caminhada leve no lugar', type: 'time', value: 120 }, { name: 'Alongamento estático', type: 'time', value: 90 }] }] }
     }
+  },
+  "plano_aquecimento_mobilidade": {
+    id: "plano_aquecimento_mobilidade",
+    nome: "Aquecimento e Mobilidade",
+    descricao: "Rotina leve e funcional para ativar o corpo, melhorar a mobilidade articular e prevenir lesões. Pode ser usada antes de treinos ou como recuperação ativa.",
+    dias: {
+      segunda: {
+        title: "Aquecimento Geral",
+        components: [
+          {
+            type: "circuito",
+            name: "Ativação Dinâmica",
+            sets: 2,
+            rest: 30,
+            exercises: [
+              { name: "Polichinelo", type: "time", value: 30 },
+              { name: "Mobilidade de quadril (círculos com perna)", type: "reps", value: "10 reps por lado" },
+              { name: "Mobilidade de ombro (círculos com braços)", type: "reps", value: "15 reps frente e trás" },
+              { name: "Marcha no lugar com elevação de joelho", type: "time", value: 30 }
+            ]
+          }
+        ]
+      },
+      terca: {
+        title: "Mobilidade de Quadril e Coluna",
+        components: [
+          {
+            type: "circuito",
+            name: "Quadril e Lombar",
+            sets: 2,
+            rest: 45,
+            exercises: [
+              { name: "Alongamento dinâmico de adutores (afundo lateral alternado)", type: "reps", value: "10 reps por lado" },
+              { name: "Mobilidade torácica (posição de 4 apoios, rotação de braço)", type: "reps", value: "10 reps por lado" },
+              { name: "Alongamento do gato e camelo (cat-cow)", type: "reps", value: "10 reps lentas" },
+              { name: "Ponte de glúteo", type: "reps", value: "15 reps" }
+            ]
+          }
+        ]
+      },
+      quarta: {
+        title: "Ativação de Core + Respiração",
+        components: [
+          {
+            type: "core-block",
+            name: "Estabilização Central",
+            sets: 2,
+            rest: 30,
+            exercises: [
+              { name: "Prancha com respiração profunda", type: "time", value: 45 },
+              { name: "Prancha lateral com elevação de braço", type: "time", value: 30, note: "por lado" },
+              { name: "Respiração diafragmática deitado", type: "time", value: 60 }
+            ]
+          }
+        ]
+      },
+      quinta: {
+        title: "Mobilidade de Ombro, Tórax e Cervical",
+        components: [
+          {
+            type: "circuito",
+            name: "Parte Superior Leve",
+            sets: 2,
+            rest: 30,
+            exercises: [
+              { name: "Mobilidade de escápula (círculos lentos)", type: "reps", value: "15 reps" },
+              { name: "Alongamento de peitoral (em parede ou porta)", type: "time", value: 30 },
+              { name: "Elevação e depressão de ombros", type: "reps", value: "15 reps" },
+              { name: "Rotação cervical lenta", type: "reps", value: "5 voltas por lado" }
+            ]
+          }
+        ]
+      },
+      sexta: {
+        title: "Full Body Leve + Alongamento",
+        components: [
+          {
+            type: "circuito",
+            name: "Fechamento Corporal",
+            sets: 2,
+            rest: 30,
+            exercises: [
+              { name: "Alongamento dinâmico de corpo inteiro (varredura com as mãos até os pés + elevação de braços)", type: "reps", value: "10 reps" },
+              { name: "Afundo com torção de tronco", type: "reps", value: "10 reps por lado" },
+              { name: "Alongamento estático posterior (sentado)", type: "time", value: 30 },
+              { name: "Alongamento cervical + respiração profunda", type: "time", value: 60 }
+            ]
+          }
+        ]
+      }
+    }
   }
 };

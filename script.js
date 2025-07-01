@@ -61,6 +61,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let exerciseTimerInterval = null;
     let exerciseSecondsRemaining = 0;
     let exerciseInitialDuration = 0;
+    let workoutStartTime = null;
     const BeepSound = new Audio('data:audio/wav;base64,UklGRigAAABXQVZFZm10IBIAAAABAAEARKwAAIhYAQACABAAAABkYXRhAgAAAAEA');
 
     // --- Funções do Menu ---
@@ -135,10 +136,10 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
         workoutHistory.forEach((item, index) => {
-            const li = document.createElement('li');
-            li.className = 'history-item';
-            li.innerHTML = `<div class="history-info"><strong>${item.dayName}</strong><span>${item.date}</span></div><div class="history-duration">${item.duration}</div><button class="delete-history-btn" data-index="${index}"><span class="material-icons">delete_outline</span></button>`;
-            historyList.appendChild(li);
+            const card = document.createElement('div');
+            card.className = 'history-card';
+            card.innerHTML = ` <button class="delete-history-btn" data-index="${index}"><span class="material-icons">delete_forever</span></button> <div class="history-card-header"> <strong>${item.workoutTitle}</strong> <span>${item.planName}</span> </div> <div class="history-card-details"> <div class="detail-item"><span>Data</span><strong>${item.date}</strong></div> <div class="detail-item"><span>Duração</span><strong>${item.duration}</strong></div> <div class="detail-item"><span>Início</span><strong>${item.startTime}</strong></div> <div class="detail-item"><span>Término</span><strong>${item.endTime}</strong></div> </div> `;
+            historyList.appendChild(card);
         });
     }
     function deleteHistoryItem(index) {
@@ -158,6 +159,9 @@ document.addEventListener('DOMContentLoaded', () => {
         const secs = String(seconds % 60).padStart(2, '0');
         return `${mins}:${secs}`;
     }
+    function getCurrentTime() {
+        return new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+    }
 
     function displayWorkout(dayKey) {
         if (isWorkoutRunning) stopWorkout(false);
@@ -176,7 +180,6 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!workout || !workout.components) {
             workoutDayTitle.textContent = "Dia de Descanso";
             workoutDisplay.innerHTML = `<div class="welcome-message"><span class="material-icons welcome-icon">self_improvement</span><h2>Aproveite para descansar!</h2><p>O descanso é fundamental.</p></div>`;
-            startButtonContainer.classList.add('hidden');
             workoutControls.classList.add('hidden');
             return;
         }
@@ -252,6 +255,7 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
         isWorkoutRunning = true; isPaused = false; currentStepIndex = -1; totalSeconds = 0;
+        workoutStartTime = getCurrentTime();
         startTotalTimer();
         updateControlsForRunning();
         nextStep();
@@ -259,7 +263,7 @@ document.addEventListener('DOMContentLoaded', () => {
     
     function stopWorkout(save = true) {
         if (save && totalSeconds > 5) {
-            const newEntry = { date: new Date().toLocaleDateString('pt-BR'), dayName: workoutDayTitle.textContent, duration: formatTime(totalSeconds) };
+            const newEntry = { date: new Date().toLocaleDateString('pt-BR'), planName: TODOS_OS_PLANOS[activePlanId].nome, workoutTitle: TODOS_OS_PLANOS[activePlanId].dias[selectedDay].title, duration: formatTime(totalSeconds), startTime: workoutStartTime, endTime: getCurrentTime() };
             workoutHistory.unshift(newEntry);
             saveHistory();
         }
@@ -366,7 +370,7 @@ document.addEventListener('DOMContentLoaded', () => {
         nextExerciseBtn.classList.remove('hidden');
     }
     
-    // FUNÇÕES DE CONTROLE CORRIGIDAS
+    // FUNÇÕES DE CONTROLE CORRIGIDAS E FINALIZADAS
     function resetControlsToInitial() {
         workoutControls.classList.remove('hidden');
         startButtonContainer.classList.remove('hidden');
@@ -377,6 +381,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function updateControlsForRunning() {
         startButtonContainer.classList.add('hidden');
         activeWorkoutView.classList.remove('hidden');
+        workoutControls.classList.remove('hidden');
     }
 
     function updateCurrentExerciseUI(step) {
