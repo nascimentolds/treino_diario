@@ -13,12 +13,17 @@
         <main class="app-screen">
             <header class="app-header">
                 <div class="header-title">
-                    <h1>Seu Treino</h1>
+                    <h1 id="app-title">Seu Treino</h1>
                     <p id="workout-day-title">Escolha um dia para começar</p>
                 </div>
-                <button id="history-btn" class="header-btn">
-                    <span class="material-icons">history</span>
-                </button>
+                <div class="header-actions">
+                    <button id="history-btn" class="header-btn">
+                        <span class="material-icons">history</span>
+                    </button>
+                    <button id="settings-btn" class="header-btn">
+                        <span class="material-icons">settings</span>
+                    </button>
+                </div>
             </header>
 
             <nav id="day-selection">
@@ -30,12 +35,7 @@
             </nav>
             
             <div id="workout-display">
-                <div class="welcome-message">
-                    <span class="material-icons welcome-icon">fitness_center</span>
-                    <h2>Pronto para suar?</h2>
-                    <p>Selecione um dia da semana acima para ver os detalhes do seu treino.</p>
                 </div>
-            </div>
 
             <div id="start-button-container">
                 <button id="start-workout-btn" class="btn btn-primary hidden">Iniciar Treino</button>
@@ -54,13 +54,9 @@
                 </div>
             </div>
             <div class="control-buttons">
-                <button id="pause-resume-btn" class="control-btn">
-                    <span class="material-icons">pause</span>
-                </button>
+                <button id="pause-resume-btn" class="control-btn"><span class="material-icons">pause</span></button>
                 <button id="next-exercise-btn" class="control-btn-main">Próximo</button>
-                <button id="stop-btn" class="control-btn">
-                    <span class="material-icons">stop</span>
-                </button>
+                <button id="stop-btn" class="control-btn"><span class="material-icons">stop</span></button>
             </div>
         </footer>
     </div>
@@ -70,27 +66,15 @@
             <p id="timer-instruction">PREPARE-SE</p>
             <h2 id="timer-exercise-name">Nome do Exercício</h2>
             <div id="timer-clock-container">
-                <svg class="timer-progress" width="220" height="220">
-                    <circle class="progress-bg" cx="110" cy="110" r="100" />
-                    <circle id="progress-ring" class="progress-ring" cx="110" cy="110" r="100" />
-                </svg>
+                <svg class="timer-progress" width="220" height="220"><circle class="progress-bg" cx="110" cy="110" r="100" /><circle id="progress-ring" class="progress-ring" cx="110" cy="110" r="100" /></svg>
                 <div id="timer-clock">00:00</div>
             </div>
             <p id="pause-indicator" class="hidden">PAUSADO</p>
-            
             <div class="timer-controls">
-                <button id="restart-timer-btn" class="timer-control-btn">
-                    <span class="material-icons">replay</span>
-                </button>
-                <button id="pause-resume-timer-btn" class="timer-control-btn large">
-                    <span class="material-icons">pause</span>
-                </button>
-                <button id="skip-step-btn" class="timer-control-btn">
-                    <span class="material-icons">skip_next</span>
-                </button>
-                <button id="exit-workout-btn" class="timer-control-btn">
-                    <span class="material-icons">close</span>
-                </button>
+                <button id="restart-timer-btn" class="timer-control-btn"><span class="material-icons">replay</span></button>
+                <button id="pause-resume-timer-btn" class="timer-control-btn large"><span class="material-icons">pause</span></button>
+                <button id="skip-step-btn" class="timer-control-btn"><span class="material-icons">skip_next</span></button>
+                <button id="exit-workout-btn" class="timer-control-btn"><span class="material-icons">close</span></button>
             </div>
         </div>
     </div>
@@ -99,11 +83,20 @@
         <div class="history-content">
             <button id="close-history-btn" class="close-btn">&times;</button>
             <h2>Histórico de Treinos</h2>
-            <ul id="history-list">
+            <ul id="history-list"></ul>
+        </div>
+    </div>
+
+    <div id="settings-overlay" class="page-overlay">
+        <div class="settings-content">
+            <button id="close-settings-btn" class="close-btn">&times;</button>
+            <h2>Escolha seu Plano de Treino</h2>
+            <ul id="plan-list">
                 </ul>
         </div>
     </div>
     
+    <script src="planos.js"></script>
     <script src="script.js"></script>
 </body>
 </html>

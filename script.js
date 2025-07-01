@@ -1,15 +1,7 @@
 document.addEventListener('DOMContentLoaded', () => {
 
-    // --- DATA ---
-    const workoutData = {
-        segunda: { title: "Full Body – Força e Resistência", components: [ { type: 'circuito', name: 'Circuito A', sets: 3, rest: 60, exercises: [ { name: 'Agachamento livre', type: 'reps', value: '15 reps' }, { name: 'Flexão de braço', type: 'reps', value: '10-15 reps' }, { name: 'Afundo alternado', type: 'reps', value: '10 reps/perna' }, { name: 'Prancha', type: 'time', value: 45 } ]}, { type: 'circuito', name: 'Circuito B', sets: 3, rest: 60, exercises: [ { name: 'Agachamento sumô', type: 'reps', value: '15 reps' }, { name: 'Flexão diamante', type: 'reps', value: '10 reps' }, { name: 'Elevação de pernas deitado', type: 'reps', value: '15 reps' }, { name: 'Prancha com toque no ombro', type: 'reps', value: '20 reps' } ]}, { type: 'finalizador', name: 'Finalizador (Opcional)', sets: 2, rest: 30, exercises: [ { name: 'Burpee', type: 'time', value: 30 }, { name: 'Agachamento com salto', type: 'time', value: 30 } ]} ] },
-        terca: { title: "HIIT + Core", components: [ { type: 'circuito', name: 'Bloco 1 HIIT', sets: 4, rest: 60, exercises: [ { name: 'Polichinelo', type: 'time', value: 30, rest: 15 }, { name: 'Agachamento com salto', type: 'time', value: 30, rest: 15 }, { name: 'Corrida estacionária', type: 'time', value: 30, rest: 15 }, { name: 'Mountain climbers', type: 'time', value: 30, rest: 0 } ]}, { type: 'core-block', name: 'Core', sets: 3, rest: 45, exercises: [ { name: 'Canivete abdominal', type: 'reps', value: '15 reps' }, { name: 'Abdominal bicicleta', type: 'reps', value: '20 reps' }, { name: 'Prancha', type: 'time', value: 60 } ]}, { type: 'finalizador', name: 'Final', sets: 1, rest: 0, exercises: [ { name: 'Burpee', type: 'time', value: 30 }, { name: 'Abdominal infra', type: 'reps', value: '20 reps' }, { name: 'Sprint no lugar', type: 'time', value: 20 } ]} ] },
-        quarta: { title: "Superior + Core", components: [ { type: 'circuito', name: 'Circuito A', sets: 3, rest: 60, exercises: [ { name: 'Flexão tradicional', type: 'reps', value: '10-15 reps' }, { name: 'Remada com elástico', type: 'reps', value: '12 reps' }, { name: 'Elevação frontal com elástico', type: 'reps', value: '12 reps' }, { name: 'Prancha', type: 'time', value: 45 } ]}, { type: 'circuito', name: 'Circuito B', sets: 3, rest: 60, exercises: [ { name: 'Flexão com toque no ombro', type: 'reps', value: '12 reps' }, { name: 'Abdominal canivete', type: 'reps', value: '15 reps' }, { name: 'Superman', type: 'reps', value: '15 reps' }, { name: 'Prancha lateral', type: 'time', value: 30, note: 'por lado' } ]}, { type: 'finalizador', name: 'Finalizador', sets: 2, rest: 0, exercises: [ { name: 'Sprint no lugar', type: 'time', value: 30 }, { name: 'Burpee', type: 'time', value: 30 } ]} ] },
-        quinta: { title: "HIIT + Core (Intenso)", components: [ { type: 'circuito', name: 'Tabata', sets: 1, rest: 60, exercises: [ { name: 'Agachamento com salto (Tabata)', type: 'tabata', value: '4 min' }, { name: 'Corrida estacionária (Tabata)', type: 'tabata', value: '4 min' }, { name: 'Flexão (Tabata)', type: 'tabata', value: '4 min' }, { name: 'Burpee (Tabata)', type: 'tabata', value: '4 min' }, ]}, { type: 'core-block', name: 'Core Blaster', sets: 2, rest: 60, exercises: [ { name: 'Prancha', type: 'time', value: 60 }, { name: 'Elevação de pernas', type: 'reps', value: '20 reps' }, { name: 'Abdominal cruzado', type: 'reps', value: '20 reps' }, { name: 'Prancha com toque no ombro', type: 'reps', value: '20 reps' } ]} ] },
-        sexta: { title: "Inferior + Abdômen", components: [ { type: 'circuito', name: 'Circuito Pernas', sets: 3, rest: 60, exercises: [ { name: 'Agachamento isométrico', type: 'time', value: 45 }, { name: 'Afundo estacionário', type: 'reps', value: '10 reps/perna' }, { name: 'Elevação de panturrilha', type: 'reps', value: '20 reps' }, { name: 'Ponte de glúteo', type: 'reps', value: '15 reps' } ]}, { type: 'core-block', name: 'Core', sets: 3, rest: 60, exercises: [ { name: 'Abdominal infra', type: 'reps', value: '15 reps' }, { name: 'Prancha lateral c/ elevação', type: 'time', value: 30, note: 'por lado' }, { name: 'Abdominal com pés elevados', type: 'reps', value: '20 reps' }, { name: 'Prancha com braço estendido', type: 'time', value: 45 } ]}, { type: 'finalizador', name: 'Finalizador (Opcional)', sets: 1, rest: 0, exercises: [ { name: 'Sprint parado', type: 'time', value: 30 }, { name: 'Canivete abdominal', type: 'reps', value: '15 reps' }, { name: 'Burpee', type: 'time', value: 30 } ]} ] }
-    };
-
     // --- DOM Elements ---
+    const appTitle = document.getElementById('app-title');
     const daySelection = document.getElementById('day-selection');
     const workoutDisplay = document.getElementById('workout-display');
     const workoutDayTitle = document.getElementById('workout-day-title');
@@ -20,10 +12,20 @@ document.addEventListener('DOMContentLoaded', () => {
     const pauseResumeBtn = document.getElementById('pause-resume-btn');
     const nextExerciseBtn = document.getElementById('next-exercise-btn');
     const stopBtn = document.getElementById('stop-btn');
+    
+    // History elements
     const historyBtn = document.getElementById('history-btn');
     const historyOverlay = document.getElementById('history-overlay');
     const closeHistoryBtn = document.getElementById('close-history-btn');
     const historyList = document.getElementById('history-list');
+
+    // Settings elements
+    const settingsBtn = document.getElementById('settings-btn');
+    const settingsOverlay = document.getElementById('settings-overlay');
+    const closeSettingsBtn = document.getElementById('close-settings-btn');
+    const planList = document.getElementById('plan-list');
+
+    // Timer elements
     const timerOverlay = document.getElementById('timer-overlay');
     const timerInstruction = document.getElementById('timer-instruction');
     const timerExerciseName = document.getElementById('timer-exercise-name');
@@ -39,20 +41,71 @@ document.addEventListener('DOMContentLoaded', () => {
     const skipStepBtn = document.getElementById('skip-step-btn');
 
     // --- State ---
+    let activePlanId = '';
+    let workoutData = {}; // Agora é dinâmico, baseado no plano ativo
     let selectedDay = null;
     let workoutQueue = [];
     let currentStepIndex = -1;
     let isWorkoutRunning = false;
     let isPaused = false;
     let workoutHistory = [];
+    
+    // Timers
     let totalTimeInterval = null;
     let totalSeconds = 0;
     let exerciseTimerInterval = null;
     let exerciseSecondsRemaining = 0;
     let exerciseInitialDuration = 0;
-    const BeepSound = new Audio('data:audio/mp3;base64,SUQzBAAAAAAAI1RTU0UAAAAPAAADTGF2ZjU2LjQwLjEwMQAAAAAAAAAAAAAA//tAwAAAAAAAAAAAAAAAAAAAAAAAAB4AAAAAABWUDQyAAAAAAAAAAAAAAAIAAAAbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW//uEMN4ADkFrgAAAAAAAAAAAAAAAAAAAAAAAADgAAAABVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV//uEMV4ADkFrgAAAAAAAAAAAAAAAAAAAAAAAADgAAAACqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq');
+    const BeepSound = new Audio('data:audio/wav;base64,UklGRigAAABXQVZFZm10IBIAAAABAAEARKwAAIhYAQACABAAAABkYXRhAgAAAAEA');
 
-    //  --- Funções de Histórico ---
+    // --- Funções de Seleção de Plano ---
+    function setActivePlan(planId) {
+        if (!TODOS_OS_PLANOS[planId]) return;
+
+        activePlanId = planId;
+        workoutData = TODOS_OS_PLANOS[planId].dias; // Define os dados do treino atual
+        localStorage.setItem('activePlanId', planId); // Salva a escolha do usuário
+
+        appTitle.textContent = TODOS_OS_PLANOS[planId].nome;
+
+        // Atualiza a exibição com o treino do dia do novo plano
+        displayWorkout(getInitialDay());
+    }
+
+    function loadActivePlan() {
+        let savedPlanId = localStorage.getItem('activePlanId');
+        if (!savedPlanId || !TODOS_OS_PLANOS[savedPlanId]) {
+            savedPlanId = Object.keys(TODOS_OS_PLANOS)[0]; // Pega o primeiro plano como padrão
+        }
+        setActivePlan(savedPlanId);
+    }
+
+    function renderPlanSelection() {
+        planList.innerHTML = '';
+        for (const planId in TODOS_OS_PLANOS) {
+            const plan = TODOS_OS_PLANOS[planId];
+            const li = document.createElement('li');
+            li.className = 'plan-item';
+            li.dataset.planId = plan.id;
+            if (plan.id === activePlanId) {
+                li.classList.add('active');
+            }
+            li.innerHTML = `<h3>${plan.nome}</h3><p>${plan.descricao}</p>`;
+            planList.appendChild(li);
+        }
+    }
+
+    function openSettings() {
+        renderPlanSelection();
+        settingsOverlay.classList.add('active');
+    }
+
+    function closeSettings() {
+        settingsOverlay.classList.remove('active');
+    }
+
+
+    // --- Funções de Histórico ---
     function saveHistory() { localStorage.setItem('workoutHistory', JSON.stringify(workoutHistory)); }
     function loadHistory() {
         const savedHistory = localStorage.getItem('workoutHistory');
@@ -82,7 +135,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function openHistory() { renderHistory(); historyOverlay.classList.add('active'); }
     function closeHistory() { historyOverlay.classList.remove('active'); }
 
-    // --- Funções Principais ---
+    // --- Funções Principais de Treino ---
     function formatTime(seconds) {
         const mins = String(Math.floor(seconds / 60)).padStart(2, '0');
         const secs = String(seconds % 60).padStart(2, '0');
@@ -90,13 +143,24 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function displayWorkout(dayKey) {
-        if (!workoutData[dayKey]) return;
-        selectedDay = dayKey;
         if (isWorkoutRunning) stopWorkout(false);
-        document.querySelectorAll('.day-btn').forEach(btn => btn.classList.toggle('active', btn.dataset.day === dayKey));
+        selectedDay = dayKey;
+        
+        document.querySelectorAll('.day-btn').forEach(btn => btn.classList.remove('active'));
+        const activeBtn = document.querySelector(`.day-btn[data-day="${dayKey}"]`);
+        if(activeBtn) activeBtn.classList.add('active');
+        
         const workout = workoutData[dayKey];
-        workoutDayTitle.textContent = workout.title;
         workoutDisplay.innerHTML = '';
+
+        if (!workout || !workout.components) {
+            workoutDayTitle.textContent = "Dia de Descanso";
+            workoutDisplay.innerHTML = `<div class="welcome-message"><span class="material-icons welcome-icon">self_improvement</span><h2>Aproveite para descansar!</h2><p>O descanso é fundamental para a recuperação e crescimento muscular.</p></div>`;
+            startWorkoutBtn.classList.add('hidden');
+            return;
+        }
+        
+        workoutDayTitle.textContent = workout.title;
         workout.components.forEach(component => {
             const card = document.createElement('div');
             card.className = 'workout-card';
@@ -113,6 +177,7 @@ document.addEventListener('DOMContentLoaded', () => {
             card.appendChild(list);
             workoutDisplay.appendChild(card);
         });
+        
         resetControlsToInitial();
         startWorkoutBtn.classList.remove('hidden');
     }
@@ -120,6 +185,8 @@ document.addEventListener('DOMContentLoaded', () => {
     function buildWorkoutQueue(dayKey) {
         const workout = workoutData[dayKey];
         workoutQueue = [];
+        if (!workout || !workout.components) return;
+
         let exerciseIdCounter = 0;
         workout.components.forEach(component => {
             for (let set = 1; set <= component.sets; set++) {
@@ -142,7 +209,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function startWorkout() {
         buildWorkoutQueue(selectedDay);
-        if (workoutQueue.length === 0) return;
+        if (workoutQueue.length === 0) {
+            alert("Não há exercícios para este dia.");
+            return;
+        }
         isWorkoutRunning = true; isPaused = false; currentStepIndex = -1; totalSeconds = 0;
         startTotalTimer();
         updateControlsForRunning();
@@ -153,7 +223,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (save && totalSeconds > 5) {
             const newEntry = {
                 date: new Date().toLocaleDateString('pt-BR'),
-                dayName: workoutData[selectedDay].title,
+                dayName: TODOS_OS_PLANOS[activePlanId].dias[selectedDay].title,
                 duration: formatTime(totalSeconds)
             };
             workoutHistory.unshift(newEntry);
@@ -182,14 +252,9 @@ document.addEventListener('DOMContentLoaded', () => {
         }, 1000);
     }
 
-    // FUNÇÃO ATUALIZADA com a correção principal
     function nextStep() {
         if (!isWorkoutRunning) return;
-
-        // CORREÇÃO PRINCIPAL: Garante que qualquer timer anterior seja limpo
-        // antes de prosseguir. Isso conserta os dois bugs relatados.
         clearInterval(exerciseTimerInterval);
-
         currentStepIndex++;
         if (currentStepIndex >= workoutQueue.length) {
             finishWorkout();
@@ -210,10 +275,8 @@ document.addEventListener('DOMContentLoaded', () => {
         const mainIcon = pauseResumeBtn.querySelector('.material-icons');
         const timerIcon = pauseResumeTimerBtn.querySelector('.material-icons');
         const newIcon = isPaused ? 'play_arrow' : 'pause';
-        
         mainIcon.textContent = newIcon;
         timerIcon.textContent = newIcon;
-        
         pauseIndicator.classList.toggle('hidden', !isPaused);
 
         if (!isPaused && isWorkoutRunning) {
@@ -226,19 +289,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function startExerciseTimer(step, isResuming = false) {
         clearInterval(exerciseTimerInterval);
-
         if (!isResuming) {
             exerciseInitialDuration = step.value;
             exerciseSecondsRemaining = step.value;
         }
-        
         timerInstruction.textContent = step.type === 'rest' ? 'DESCANSO' : 'EXERCÍCIO';
         timerExerciseName.textContent = step.name;
         timerOverlay.classList.remove('hidden');
-        
-        if (isPaused) {
-            handlePauseResume();
-        }
+        if (isPaused) handlePauseResume();
         
         const updateClock = () => {
             if (isPaused) return;
@@ -260,29 +318,24 @@ document.addEventListener('DOMContentLoaded', () => {
     function restartCurrentTimer() {
         if (!isWorkoutRunning) return;
         exerciseSecondsRemaining = exerciseInitialDuration;
-        if (isPaused) {
-            handlePauseResume();
-        }
+        if (isPaused) handlePauseResume();
     }
 
     function skipCurrentStep() {
         if (!isWorkoutRunning) return;
-        // Não precisa mais do clearInterval aqui, pois nextStep() já cuida disso.
         timerOverlay.classList.add('hidden');
         nextStep();
     }
     
     function closeTimerAndPause() {
         if (!isWorkoutRunning) return;
-        if (!isPaused) {
-            handlePauseResume();
-        }
+        if (!isPaused) handlePauseResume();
         timerOverlay.classList.add('hidden');
         nextExerciseBtn.classList.remove('hidden');
     }
 
     function resetControlsToInitial() {
-        startWorkoutBtn.classList.remove('hidden');
+        startWorkoutBtn.classList.add('hidden');
         workoutControls.classList.add('hidden');
         document.querySelectorAll('.exercise-item.current').forEach(el => el.classList.remove('current'));
     }
@@ -304,9 +357,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- Event Listeners ---
     daySelection.addEventListener('click', (e) => {
-        if (e.target.classList.contains('day-btn')) {
-            displayWorkout(e.target.dataset.day);
-        }
+        if (e.target.classList.contains('day-btn')) displayWorkout(e.target.dataset.day);
     });
 
     startWorkoutBtn.addEventListener('click', startWorkout);
@@ -315,6 +366,8 @@ document.addEventListener('DOMContentLoaded', () => {
     stopBtn.addEventListener('click', () => stopWorkout(true));
     historyBtn.addEventListener('click', openHistory);
     closeHistoryBtn.addEventListener('click', closeHistory);
+    settingsBtn.addEventListener('click', openSettings);
+    closeSettingsBtn.addEventListener('click', closeSettings);
     pauseResumeTimerBtn.addEventListener('click', handlePauseResume);
     restartTimerBtn.addEventListener('click', restartCurrentTimer);
     exitWorkoutBtn.addEventListener('click', closeTimerAndPause);
@@ -323,8 +376,15 @@ document.addEventListener('DOMContentLoaded', () => {
     historyList.addEventListener('click', (e) => {
         const deleteButton = e.target.closest('.delete-history-btn');
         if (deleteButton) {
-            const indexToDelete = parseInt(deleteButton.dataset.index, 10);
-            deleteHistoryItem(indexToDelete);
+            deleteHistoryItem(parseInt(deleteButton.dataset.index, 10));
+        }
+    });
+
+    planList.addEventListener('click', (e) => {
+        const planItem = e.target.closest('.plan-item');
+        if (planItem) {
+            setActivePlan(planItem.dataset.planId);
+            closeSettings();
         }
     });
 
@@ -335,5 +395,5 @@ document.addEventListener('DOMContentLoaded', () => {
         return dayMap[todayIndex];
     }
     loadHistory();
-    displayWorkout(getInitialDay());
+    loadActivePlan();
 });

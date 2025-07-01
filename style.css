@@ -30,9 +30,10 @@ body {
 }
 
 .app-screen { padding: 20px; }
-.app-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; }
-.app-header h1 { font-size: 28px; font-weight: 700; }
-.app-header p { color: var(--text-muted); font-size: 16px; }
+.app-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 24px; }
+.header-title h1 { font-size: 28px; font-weight: 700; }
+.header-title p { color: var(--text-muted); font-size: 16px; }
+.header-actions { display: flex; gap: 10px; }
 .header-btn { background: var(--bg-card); border: none; width: 44px; height: 44px; border-radius: 50%; color: var(--text-light); cursor: pointer; display: flex; justify-content: center; align-items: center; }
 
 #day-selection { display: flex; justify-content: space-between; margin-bottom: 30px; }
@@ -68,12 +69,12 @@ body {
 .control-btn-main { background-color: var(--primary-orange); color: var(--text-light); font-size: 18px; font-weight: 700; padding: 16px 40px; border-radius: 30px; }
 
 /* --- Timer Overlay --- */
-#timer-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: var(--bg-dark); display: flex; justify-content: center; align-items: center; flex-direction: column; z-index: 1000; padding: 20px; }
+#timer-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: var(--bg-dark); display: flex; justify-content: center; align-items: center; flex-direction: column; z-index: 3000; padding: 20px; }
 .timer-content { display: flex; flex-direction: column; align-items: center; text-align: center; width: 100%;}
 #timer-instruction { font-size: 20px; font-weight: 700; text-transform: uppercase; color: var(--primary-orange); letter-spacing: 2px; margin-bottom: 8px; }
-#timer-exercise-name { font-size: 32px; font-weight: 600; margin-bottom: 100px; color: var(--text-light); }
-#timer-clock-container { position: relative; display: flex; justify-content: center; align-items: center; margin-bottom: 100px; }
-#timer-clock { font-size: 62px; font-weight: bold; }
+#timer-exercise-name { font-size: 32px; font-weight: 600; margin-bottom: 50px; color: var(--text-light); }
+#timer-clock-container { position: relative; display: flex; justify-content: center; align-items: center; margin-bottom: 50px; }
+#timer-clock { font-size: 64px; font-weight: bold; }
 .timer-progress { position: absolute; transform: rotate(-90deg); }
 .progress-bg { stroke: #2a2a2a; fill: none; stroke-width: 10; }
 .progress-ring { stroke: var(--primary-orange); fill: none; stroke-width: 10; transition: stroke-dashoffset 1s linear; stroke-linecap: round; }
@@ -84,30 +85,41 @@ body {
 .timer-control-btn.large { width: 80px; height: 80px; background-color: var(--primary-orange); }
 .timer-control-btn.large .material-icons { font-size: 48px; }
 
-/* --- Tela de Histórico --- */
-.page-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: var(--bg-dark); z-index: 2000; transform: translateY(100%); transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1); }
-.page-overlay.active { transform: translateY(0); }
-.history-content { padding: 25px; width: 100%; height: 100%; display: flex; flex-direction: column; position: relative; }
-.history-content h2 { text-align: center; margin-bottom: 20px; color: var(--primary-orange); }
+/* --- Telas de Sobreposição (Histórico e Configurações) --- */
+.page-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: var(--bg-dark); z-index: 2000; transform: translateY(100%); transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1); visibility: hidden; }
+.page-overlay.active { transform: translateY(0); visibility: visible; }
+.history-content, .settings-content { padding: 25px; width: 100%; height: 100%; display: flex; flex-direction: column; position: relative; }
+.history-content h2, .settings-content h2 { text-align: center; margin-bottom: 20px; color: var(--primary-orange); }
 .close-btn { position: absolute; top: 20px; right: 20px; background: none; border: none; color: var(--text-muted); font-size: 36px; line-height: 1; cursor: pointer; }
-#history-list { list-style: none; overflow-y: auto; flex-grow: 1; }
+
+#history-list, #plan-list { list-style: none; overflow-y: auto; flex-grow: 1; }
 .history-item { display: flex; justify-content: space-between; align-items: center; padding: 15px 10px; border-bottom: 1px solid #2a2a2a; }
 .history-item:last-child { border-bottom: none; }
 .history-info { flex-grow: 1; }
 .history-info strong { font-size: 16px; display: block; }
 .history-info span { font-size: 14px; color: var(--text-muted); }
 .history-duration { font-size: 18px; font-weight: 600; color: var(--primary-orange); margin: 0 15px; }
+.delete-history-btn { background: none; border: none; color: var(--text-muted); cursor: pointer; padding: 5px; }
+.delete-history-btn:hover .material-icons { color: var(--danger-red); }
 
-/* NOVO ESTILO para o botão de deletar */
-.delete-history-btn {
-    background: none;
-    border: none;
-    color: var(--text-muted);
+/* Estilos para a lista de planos */
+.plan-item {
+    background-color: var(--bg-card);
+    padding: 20px;
+    border-radius: 15px;
+    margin-bottom: 15px;
+    border: 2px solid var(--bg-card);
     cursor: pointer;
-    padding: 5px;
+    transition: border-color 0.3s ease;
 }
-.delete-history-btn:hover .material-icons {
-    color: var(--danger-red);
+.plan-item:hover {
+    border-color: var(--text-muted);
 }
+.plan-item.active {
+    border-color: var(--primary-orange);
+}
+.plan-item h3 { margin: 0 0 5px 0; }
+.plan-item p { color: var(--text-muted); font-size: 14px; }
+
 
 .hidden { display: none !important; }
