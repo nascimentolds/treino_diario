@@ -9,17 +9,6 @@
 </head>
 <body>
 
-    <div id="sidenav-overlay"></div>
-    <nav id="sidenav">
-        <div class="sidenav-header">
-            <h2>Menu</h2>
-            <button id="close-sidenav-btn" class="header-btn">&times;</button>
-        </div>
-        <a href="#" id="menu-theme-btn"><span class="material-icons">dark_mode</span>Alternar Tema</a>
-        <a href="#" id="menu-history-btn"><span class="material-icons">history</span>Histórico</a>
-        <a href="#" id="menu-settings-btn"><span class="material-icons">settings</span>Planos de Treino</a>
-    </nav>
-
     <div class="app-container">
         <main class="app-screen">
             <header class="app-header">
@@ -76,41 +65,66 @@
                 <button id="start-workout-btn" class="btn btn-primary">Iniciar Treino</button>
             </div>
         </footer>
+
+        <div id="sidenav-overlay"></div>
+        <nav id="sidenav">
+            <div class="sidenav-header">
+                <h2>Menu</h2>
+                <button id="close-sidenav-btn" class="header-btn">&times;</button>
+            </div>
+            <a href="#" id="menu-theme-btn"><span class="material-icons">dark_mode</span>Alternar Tema</a>
+            <a href="#" id="menu-history-btn"><span class="material-icons">history</span>Histórico</a>
+            <a href="#" id="menu-settings-btn"><span class="material-icons">settings</span>Planos de Treino</a>
+        </nav>
+
+        <div id="timer-overlay" class="hidden">
+            <div class="timer-content">
+                <p id="timer-instruction">PREPARE-SE</p>
+                <h2 id="timer-exercise-name">Nome do Exercício</h2>
+                <div id="timer-clock-container">
+                    <svg class="timer-progress" width="220" height="220"><circle class="progress-bg" cx="110" cy="110" r="100" /><circle id="progress-ring" class="progress-ring" cx="110" cy="110" r="100" /></svg>
+                    <div id="timer-clock">00:00</div>
+                </div>
+                <p id="pause-indicator" class="hidden">PAUSADO</p>
+                <div class="timer-controls">
+                    <button id="restart-timer-btn" class="timer-control-btn"><span class="material-icons">replay</span></button>
+                    <button id="pause-resume-timer-btn" class="timer-control-btn large"><span class="material-icons">pause</span></button>
+                    <button id="skip-step-btn" class="timer-control-btn"><span class="material-icons">skip_next</span></button>
+                    <button id="exit-workout-btn" class="timer-control-btn"><span class="material-icons">close</span></button>
+                </div>
+            </div>
+        </div>
+
+        <div id="history-overlay" class="page-overlay">
+            <div class="page-content">
+                <button id="close-history-btn" class="close-btn">&times;</button>
+                <h2>Histórico de Treinos</h2>
+                <ul id="history-list"></ul>
+            </div>
+        </div>
+
+        <div id="settings-overlay" class="page-overlay">
+            <div class="page-content">
+                <button id="close-settings-btn" class="close-btn">&times;</button>
+                <h2>Escolha seu Plano de Treino</h2>
+                <ul id="plan-list"></ul>
+            </div>
+        </div>
+
+        <div id="next-exercise-toast">
+            <p>A SEGUIR:</p>
+            <strong id="toast-exercise-name"></strong>
+        </div>
+
+        <div id="demo-modal-overlay" class="hidden">
+            <div class="demo-modal-content">
+                <button id="close-demo-modal-btn" class="close-btn">&times;</button>
+                <h3 id="demo-modal-title">Nome do Exercício</h3>
+                <img id="demo-modal-gif" src="" alt="Demonstração do exercício">
+            </div>
+        </div>
     </div>
 
-    <div id="timer-overlay" class="hidden">
-        <div class="timer-content">
-            <p id="timer-instruction">PREPARE-SE</p>
-            <h2 id="timer-exercise-name">Nome do Exercício</h2>
-            <div id="timer-clock-container">
-                <svg class="timer-progress" width="220" height="220"><circle class="progress-bg" cx="110" cy="110" r="100" /><circle id="progress-ring" class="progress-ring" cx="110" cy="110" r="100" /></svg>
-                <div id="timer-clock">00:00</div>
-            </div>
-            <p id="pause-indicator" class="hidden">PAUSADO</p>
-            <div class="timer-controls">
-                <button id="restart-timer-btn" class="timer-control-btn"><span class="material-icons">replay</span></button>
-                <button id="pause-resume-timer-btn" class="timer-control-btn large"><span class="material-icons">pause</span></button>
-                <button id="skip-step-btn" class="timer-control-btn"><span class="material-icons">skip_next</span></button>
-                <button id="exit-workout-btn" class="timer-control-btn"><span class="material-icons">close</span></button>
-            </div>
-        </div>
-    </div>
-    <div id="history-overlay" class="page-overlay">
-        <div class="page-content">
-            <button id="close-history-btn" class="close-btn">&times;</button>
-            <h2>Histórico de Treinos</h2>
-            <ul id="history-list"></ul>
-        </div>
-    </div>
-    <div id="settings-overlay" class="page-overlay">
-        <div class="page-content">
-            <button id="close-settings-btn" class="close-btn">&times;</button>
-            <h2>Escolha seu Plano de Treino</h2>
-            <ul id="plan-list"></ul>
-        </div>
-    </div>
-    
-    <script src="planos.js"></script>
-    <script src="script.js"></script>
+    <script src="js/main.js" type="module"></script>
 </body>
 </html>
